@@ -5,7 +5,7 @@ import serial
 
 kernel = np.ones((5,5),np.uint8)
 
-cam = "redline_Trim.mp4" #In the practical case the cam would be a link to the DVR camera which would take live feed
+cam = "redline_test.mp4" #In the practical case the cam would be a link to the DVR camera which would take live feed
 def empty(a):
     pass
 
