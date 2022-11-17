@@ -1,14 +1,15 @@
 import cv2
 import numpy as np
 import serial
+ser = serial.Serial('COM6', 9600)
 
 def movement(state):
     if state == 1 or state == 5:
-        print("right")
+        ser.write("a")
     elif state == 2 or state == 4:
-        print("down")
+        ser.write("k")
     elif state == 3:
-        print("left")
+        ser.write("z")
 
 def getbasePoints(img, minpercentage=0.1):
     histyValues = np.sum(img, axis=0)
@@ -24,30 +25,30 @@ def getbasePoints(img, minpercentage=0.1):
     return basexPoint, baseyPoint
 
 
-def centralizeY(baseyPoint, state):
+def centralizeY(baseyPoint, state): #Stabalize the vertical altitude
     if state == 1 or state == 3 or state == 5:
         if baseyPoint > 167:
-            print("down")
+            ser.write("k") #letter k translates to downward
         elif baseyPoint < 75:
-            print("up")
+            ser.write("l") #letter l translates to upward
         else:
             movement(state)
 
     else: pass
 
-def centralizeX(basexPoint, state):
+def centralizeX(basexPoint, state): #Stabalize the horizontal altitude
     if state == 2:
         if basexPoint > 730:
-            print("right")
+            ser.write("a") #letter a translates to right
         elif basexPoint < 710:
-            print("left")
+            ser.write("z") #letter z translates to left
         else:
             movement(state)
     elif state == 4:
         if basexPoint > 250:
-            print("right")
+            ser.write("a")
         elif basexPoint < 230:
-            print("left")
+            ser.write("z")
         else: 
             movement(state)
     else: pass
@@ -81,10 +82,10 @@ def rotation_control(state, maskDialated, sens=0.08):
             if area_l > area_r:
                 #print("AREALEFT: ", area_l, "Area Right: ", area_r)
                 if (area_l-area_r)/avg_area > sens:
-                    print("anticlockwise")
+                    ser.write("o") #letter o means anticlockwise
             elif area_r > area_l:
                 if (area_r-area_l)/avg_area > sens:
-                    print("clockwise")
+                    ser.write("p") #letter p means clockwise
 
         #cv2.imshow("croppedleft", crop_l)
         #cv2.imshow("croppedright", crop_r)
